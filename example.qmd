@@ -1,0 +1,38 @@
+---
+title: "CleanSlideKit RevealJS"
+subtitle: "Example deck"
+author: "rkskmt"
+format: cleanslidekit-revealjs
+---
+
+## Headings & text
+
+A normal paragraph. Inline highlight via `hl.lua`, full-width colon alignment
+via `fw-colon.lua`, and the `.en` typography for English co-notation:
+
+過学習（[overfitting]{.en}）と DNN（[Deep Neural Network]{.en .abbr}）。
+
+## Math
+
+Inline $e^{i\pi} + 1 = 0$ and display:
+
+$$\int_0^1 x^2 \, dx = \frac{1}{3}$$
+
+## Diagram (mermaid)
+
+```{mermaid}
+flowchart LR
+  A[Data] --> B[Model] --> C[Slides]
+```
+
+## Plotly embed
+
+Export a Plotly figure to HTML, then embed it sized:
+
+::: {.plotly-iframe src="my-figure.html" width="900" height="520"}
+:::
+
+## UI kit
+
+This deck ships `peek-ui.js` (overview), `search-ui.js` (in-deck search), and
+`slide-ui.js` (layout helpers) automatically — no wiring needed.

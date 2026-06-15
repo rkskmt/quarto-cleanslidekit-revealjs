@@ -1,0 +1,15 @@
+# Quarto render artifacts
+/.quarto/
+*_files/
+example.html
+/_site/
+
+# format-resources copied next to example.html on render (the sources live in
+# _extensions/cleanslidekit/ — these root copies are build output only)
+/custom.css
+/slide-ui.js
+/search-ui.js
+/peek-ui.js
+
+# OS / editor
+.DS_Store
