@@ -607,10 +607,12 @@ a.lightbox[href]::after {
   -webkit-text-stroke: 0.02em currentColor;
   letter-spacing: 0.01em;
 }
-/* Spelled-out form of an abbreviation, e.g. DNN（[Deep Neural Network]{.en .abbr}）.
-   Title Case in the source; rendered bold to read as the term's official name. */
-.reveal .en.abbr {
-  font-weight: bold;
+/* Spelled-out form of an abbreviation is just bold: write it as Markdown
+   **…** inside .en, e.g. DNN（[**Deep Neural Network**]{.en}）. The <strong>
+   child would otherwise inherit .en's hairline text-stroke and look
+   double-weighted, so zero the stroke on it. (No .abbr class: Pandoc rewrites
+   {.abbr} to <abbr> and drops the .en class along with it.) */
+.reveal .en strong {
   -webkit-text-stroke: 0;
 }
 .break-slide h2 { border: none !important; }

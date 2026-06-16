@@ -10,7 +10,7 @@ format: cleanslidekit-revealjs
 A normal paragraph. Inline highlight via `hl.lua`, full-width colon alignment
 via `fw-colon.lua`, and the `.en` typography for English co-notation:
 
-過学習（[overfitting]{.en}）と DNN（[Deep Neural Network]{.en .abbr}）。
+過学習（[overfitting]{.en}）と DNN（[**Deep Neural Network**]{.en}）。
 
 ## Math
 
