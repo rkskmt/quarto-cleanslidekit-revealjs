@@ -734,7 +734,7 @@ a.lightbox[href]::after {
    (set inline by the script) so a long heading wraps before the badge zone. */
 .reveal .slides section > .slide-badge-group {
   position: absolute;
-  top: -8px;             /* sit as high as possible; petals may bleed off the top */
+  top: 2px;              /* high in the corner, head fully visible (no top bleed) */
   right: 22px;
   display: flex;
   gap: 14px;

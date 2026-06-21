@@ -103,7 +103,7 @@
   // Japanese: arch text at default size, big JP word in the center.
   function renderJA(key, size) { var P = PRESETS[key]; return badge(Object.assign({}, P, { size: size, centerText: P.ja, centerSize: jaSize(P.ja) })); }
 
-  var SIZE = 182, BW = Math.round(SIZE * 200 / 256), GAP = 14, RIGHT = 22;
+  var SIZE = 125, BW = Math.round(SIZE * 200 / 256), GAP = 14, RIGHT = 22;
 
   function decorate() {
     try {
