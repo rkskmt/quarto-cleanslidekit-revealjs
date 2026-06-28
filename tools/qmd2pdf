@@ -39,8 +39,15 @@ done
 [[ "$MODE" == handout || "$MODE" == slides ]] || { echo "qmd2pdf: --mode must be handout|slides" >&2; exit 2; }
 
 # ---- locate chrome ------------------------------------------------------
+# Prefer the Quarto-managed Chromium (`quarto install chromium`) — it's the
+# reproducible, declared dependency. Fall back to a Playwright/system browser.
 CHROME="${CSK_CHROME:-}"
 if [[ -z "$CHROME" ]]; then
+  CHROME="$(find "$HOME/.local/share/quarto/chromium" -type f \
+    \( -name chrome -o -name chromium -o -name chrome.exe -o -name Chromium \) \
+    2>/dev/null | head -1)"
+fi
+if [[ -z "$CHROME" || ! -x "$CHROME" ]]; then
   for c in \
     "$HOME"/.cache/ms-playwright/chromium-*/chrome-linux64/chrome \
     "$HOME"/.cache/ms-playwright/chromium-*/chrome-linux/chrome \
@@ -48,7 +55,7 @@ if [[ -z "$CHROME" ]]; then
     [[ -x "$c" ]] && { CHROME="$c"; break; }
   done
 fi
-[[ -x "$CHROME" ]] || { echo "qmd2pdf: no chrome found; set CSK_CHROME=/path/to/chrome" >&2; exit 3; }
+[[ -n "$CHROME" && -x "$CHROME" ]] || { echo "qmd2pdf: no Chromium found — run 'quarto install chromium' (or set CSK_CHROME=/path/to/chrome)" >&2; exit 3; }
 
 # ---- render (qmd → html) ------------------------------------------------
 case "$SRC" in
