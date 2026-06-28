@@ -122,7 +122,7 @@ function payload(html){
    width:${CW}px!important;max-width:${CW}px!important;min-height:0!important;height:auto!important;
    top:0!important;left:0!important;transform:none!important;opacity:1!important;visibility:visible!important;
    margin:0 auto 22px auto!important;padding:26px ${PAD}px!important;box-sizing:border-box!important;
-   border:1px solid #e6e8eb!important;border-radius:8px!important;overflow:visible!important;
+   border:1px solid #aab3bf!important;border-radius:8px!important;overflow:visible!important;
    break-inside:avoid!important;page-break-inside:avoid!important;
    break-after:auto!important;page-break-after:auto!important;
    break-before:auto!important;page-break-before:auto!important}
@@ -171,6 +171,20 @@ function payload(html){
  html:not(.print-pdf) .reveal .cite{position:static!important;display:block;text-align:right;
    background:transparent!important;color:#8a8a8a!important;margin-top:4px!important}
  html:not(.print-pdf) .reveal .cite a{color:#8a8a8a!important}
+ /* Figures/plots are centered on screen (reveal/Quarto), but our left text-align
+    pulls anything not centered via margin:auto to the left. Re-center them. */
+ html:not(.print-pdf) .reveal .cell-output-display,
+ html:not(.print-pdf) .reveal figure,
+ html:not(.print-pdf) .reveal .quarto-figure,
+ html:not(.print-pdf) .reveal .plotly-iframe{text-align:center!important}
+ html:not(.print-pdf) .reveal .cell-output-display img,
+ html:not(.print-pdf) .reveal figure img,
+ html:not(.print-pdf) .reveal .quarto-figure img,
+ html:not(.print-pdf) .reveal p>img,
+ html:not(.print-pdf) .reveal iframe{display:block!important;margin-left:auto!important;margin-right:auto!important}
+ /* per-slide number, bottom-right (element added by the script as .csk-pagenum) */
+ html:not(.print-pdf) .reveal .slides section>.csk-pagenum{position:absolute!important;
+   bottom:10px;right:16px;font-size:15px;line-height:1;color:#666;font-weight:500;z-index:5}
  ${UI_HIDE}
 }</style>`;
   const js=`<script id="__qmd2pdf_js">
@@ -187,6 +201,9 @@ function payload(html){
   var ss=document.querySelectorAll("source[data-srcset]");for(var q=0;q<ss.length;q++){ss[q].srcset=ss[q].getAttribute("data-srcset")}
   var le=document.querySelectorAll('img[loading="lazy"]');for(var p=0;p<le.length;p++){le[p].loading="eager"}
   var bg=document.querySelectorAll("[data-background-image]");for(var m=0;m<bg.length;m++){var u=bg[m].getAttribute("data-background-image");if(u&&!bg[m].style.backgroundImage){bg[m].style.backgroundImage="url('"+u+"')";bg[m].style.backgroundSize="contain";bg[m].style.backgroundRepeat="no-repeat";bg[m].style.backgroundPosition="center"}}
+  // number each leaf slide bottom-right (document order = slide order)
+  var lv=document.querySelectorAll(".reveal .slides section:not(.stack)"),cn=0;
+  for(var x=0;x<lv.length;x++){cn++;if(!lv[x].querySelector(":scope > .csk-pagenum")){var pn=document.createElement("div");pn.className="csk-pagenum";pn.textContent=cn;lv[x].appendChild(pn)}}
  }
  try{if(window.Reveal&&Reveal.on)Reveal.on("ready",flat)}catch(e){}
  document.addEventListener("DOMContentLoaded",flat);window.addEventListener("load",flat);
