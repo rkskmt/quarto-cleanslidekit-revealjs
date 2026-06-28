@@ -1,0 +1,253 @@
+#!/usr/bin/env bash
+# qmd2pdf — render a CleanSlideKit (or any reveal.js) Quarto deck to a real,
+# vector, selectable-text PDF. No screenshots.
+#
+# Two layouts:
+#   handout (default) — un-reveals the deck: each slide becomes a natural-height
+#                       block, stacked as a flowing document. Slides that don't
+#                       fit 16:9 are NOT clipped (Quarto's scrollable content is
+#                       kept in full), and pages are packed by real rendered
+#                       height with break-inside:avoid (smart page breaks).
+#   slides            — classic one-slide-per-page via reveal's ?print-pdf
+#                       (fixed 16:9; overflowing content is clipped).
+#
+# Usage:   ./qmd2pdf deck.qmd [--mode handout|slides] [-o out.pdf]
+#                             [--wait 15000] [--no-render]
+#            --mode        layout (default: handout)
+#            --no-render   skip `quarto render`, use an already-built .html
+#            --wait MS     virtual-time budget for async render (math/mermaid/plotly)
+#
+# Env overrides:
+#   CSK_CHROME   path to a chrome/chromium binary (auto-detected otherwise)
+set -euo pipefail
+
+# ---- args ---------------------------------------------------------------
+SRC=""; OUT=""; WAIT=15000; RENDER=1; MODE="handout"
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -o|--out)     OUT="$2"; shift 2;;
+    --wait)       WAIT="$2"; shift 2;;
+    --mode)       MODE="$2"; shift 2;;
+    --handout)    MODE="handout"; shift;;
+    --slides)     MODE="slides"; shift;;
+    --no-render)  RENDER=0; shift;;
+    -h|--help)    sed -n '2,21p' "$0"; exit 0;;
+    *)            SRC="$1"; shift;;
+  esac
+done
+[[ -n "$SRC" ]] || { echo "qmd2pdf: need a .qmd (or .html) input" >&2; exit 2; }
+[[ "$MODE" == handout || "$MODE" == slides ]] || { echo "qmd2pdf: --mode must be handout|slides" >&2; exit 2; }
+
+# ---- locate chrome ------------------------------------------------------
+CHROME="${CSK_CHROME:-}"
+if [[ -z "$CHROME" ]]; then
+  for c in \
+    "$HOME"/.cache/ms-playwright/chromium-*/chrome-linux64/chrome \
+    "$HOME"/.cache/ms-playwright/chromium-*/chrome-linux/chrome \
+    /usr/bin/chromium /usr/bin/chromium-browser /usr/bin/google-chrome; do
+    [[ -x "$c" ]] && { CHROME="$c"; break; }
+  done
+fi
+[[ -x "$CHROME" ]] || { echo "qmd2pdf: no chrome found; set CSK_CHROME=/path/to/chrome" >&2; exit 3; }
+
+# ---- render (qmd → html) ------------------------------------------------
+case "$SRC" in
+  *.qmd)
+    if [[ "$RENDER" -eq 1 ]]; then
+      echo "qmd2pdf: rendering $SRC …" >&2
+      # No --to: use the document/project format (e.g. cleanslidekit-revealjs).
+      # Website projects emit to _site/, so the output is NOT necessarily next
+      # to the .qmd — read the real path Quarto reports.
+      RLOG="$(mktemp)"
+      quarto render "$SRC" 2>&1 | tee "$RLOG" >&2
+      REPORTED="$(grep -aoE 'Output created: .+' "$RLOG" | tail -1 | sed 's/^Output created: //')"
+      rm -f "$RLOG"
+      HTML=""
+      for base in "." "$(dirname "$SRC")" "$(dirname "$SRC")/.."; do
+        [[ -n "$REPORTED" && -f "$base/$REPORTED" ]] && { HTML="$base/$REPORTED"; break; }
+      done
+      [[ -n "$HTML" ]] || HTML="$(find "$(dirname "$SRC")" -name "$(basename "${SRC%.qmd}").html" -type f 2>/dev/null | head -1)"
+    else
+      HTML="${SRC%.qmd}.html"
+    fi;;
+  *.html) HTML="$SRC";;
+  *) echo "qmd2pdf: input must be .qmd or .html" >&2; exit 2;;
+esac
+[[ -f "$HTML" ]] || { echo "qmd2pdf: rendered HTML not found (looked for Quarto's 'Output created:' path): $HTML" >&2; exit 4; }
+[[ -n "$OUT" ]] || OUT="${HTML%.html}.pdf"
+
+DIR="$(cd "$(dirname "$HTML")" && pwd)"
+FILE="$(basename "$HTML")"
+OUT="$(cd "$(dirname "$OUT")" && pwd)/$(basename "$OUT")"
+
+# ---- static server that injects the print/handout payload ---------------
+# Interactive UI (nav bar, home/search buttons, zoom modals) must not bleed onto
+# paper; in handout mode we additionally neutralise reveal's fixed-size layout so
+# each slide flows at its natural rendered height. Injected at serve time so the
+# theme itself is never modified.
+SRV_JS="$(mktemp --suffix=.cjs)"
+cat > "$SRV_JS" <<'NODE'
+const http=require("http"),fs=require("fs"),path=require("path");
+const root=process.argv[2], mode=process.argv[3]||"handout";
+
+const UI_HIDE=`#slide-nav,#home-btn,#search-btn,#search-modal,#peek-modal,
+  .code-expand-button,.code-zoom-modal,.reveal>.footer,
+  aside.notes,.reveal aside.notes,.speaker-notes,
+  .modebar,.modebar-container,.js-plotly-plot .modebar,
+  .reveal .controls,.reveal .progress,.reveal .slide-number{display:none!important}`;
+
+function payload(html){
+  if(mode==="slides") return `<style id="__qmd2pdf">@media print{${UI_HIDE}\nhtml,body{background:#fff!important}}</style>`;
+  // handout: read the deck's configured slide width from the reveal config
+  const m=html.match(/width:\s*([0-9]{3,5})\s*,/);
+  const W=m?parseInt(m[1],10):1280;
+  // Card content must be the deck's full slide width W (the coordinate system the
+  // slide is authored in) or wide content (e.g. a row of equations) overflows.
+  // So card = W + padding, and the page = card + page-margin.
+  const PAD=34, M=44, CW=W+2*PAD, PW=CW+2*M, PH=Math.round(PW*1.414);  // A-portrait
+  const css=`<style id="__qmd2pdf">
+@page{size:${PW}px ${PH}px;margin:${M}px}
+@media print{
+ html,body{background:#fff!important;height:auto!important;overflow:visible!important}
+ .reveal-viewport,.reveal{position:static!important;height:auto!important;width:auto!important;overflow:visible!important;display:block!important;background:#fff!important}
+ html:not(.print-pdf) .reveal .slides{position:static!important;transform:none!important;left:0!important;top:0!important;width:auto!important;height:auto!important;display:block!important;text-align:left;zoom:1}
+ /* MUST match reveal's own print selector specificity to win. reveal.css ships:
+      html:not(.print-pdf) .reveal .slides section{width:auto;padding:60px 20px;
+        page-break-after:always !important}
+    — all !important, specificity (0,3,2). We re-issue the SAME selector later in
+    source order so our values take over: natural height, real slide width, and
+    page-break:auto so slides FLOW and pack instead of one-per-page. */
+ html:not(.print-pdf) .reveal .slides section{
+   display:block!important;position:relative!important;
+   width:${CW}px!important;max-width:${CW}px!important;min-height:0!important;height:auto!important;
+   top:0!important;left:0!important;transform:none!important;opacity:1!important;visibility:visible!important;
+   margin:0 auto 22px auto!important;padding:26px ${PAD}px!important;box-sizing:border-box!important;
+   border:1px solid #e6e8eb!important;border-radius:8px!important;overflow:visible!important;
+   break-inside:avoid!important;page-break-inside:avoid!important;
+   break-after:auto!important;page-break-after:auto!important;
+   break-before:auto!important;page-break-before:auto!important}
+ html:not(.print-pdf) .reveal .slides section.stack{border:none!important;padding:0!important;margin:0 auto!important}
+ /* Section-divider slides (## {.break-slide}) are transitions, not content. As a
+    natural-height card they look like an empty box, so render them as a clearly
+    banded section break — rules above & below + centered title — to signal
+    "a new block starts here". */
+ html:not(.print-pdf) .reveal .slides section.break-slide{
+   border:none!important;border-radius:0!important;background:#eef2f8!important;
+   border-top:2.5px solid #aeb8c6!important;border-bottom:2.5px solid #aeb8c6!important;
+   text-align:center!important;margin:2px auto 30px auto!important;padding:26px 40px!important}
+ html:not(.print-pdf) .reveal section.break-slide .break-title{
+   width:auto!important;max-width:none!important;margin:0 auto!important;
+   padding:0!important;border-bottom:none!important;text-align:center!important;
+   font-size:1.7em!important;color:#2a3340!important}
+ .reveal .slides section[hidden]{display:block!important}
+ .reveal .fragment{opacity:1!important;visibility:visible!important}
+ .reveal .slide-background,.reveal .backgrounds{display:none!important}
+ .reveal .r-stretch,.reveal .r-stretch img,.reveal .r-stretch svg{max-height:none!important;height:auto!important}
+ .reveal section img,.reveal section svg{max-width:100%!important}
+ /* Quarto/reveal scroll code blocks at max-height 400-500px (overflow:auto). In a
+    handout we want the FULL listing, so unclamp the height and kill inner scroll
+    (the theme's click-to-zoom button is interactive and hidden in print). */
+ .reveal pre,.reveal pre code,.reveal pre.sourceCode code,.reveal div.sourceCode,
+ .reveal .sourceCode,.reveal .cell-output pre,.reveal .code-expand-scaffold,
+ .reveal details pre code{max-height:none!important;overflow:visible!important}
+ /* client-rendered mermaid sizes its SVG to the container; in a wide handout card
+    that upscales and clips foreignObject labels. Keep it at natural size. */
+ .reveal .mermaid,.reveal pre.mermaid{display:flex!important;justify-content:center!important}
+ .reveal .mermaid svg{width:auto!important;max-width:100%!important;height:auto!important}
+ /* .fig-cite puts the photo in a div's background-image at height:90% — which
+    collapses to ~0 in an auto-height card. Give it real height so the image
+    shows. Its overlay text (.content-box) and citation (.cite) are absolutely
+    positioned to sit ON the photo; un-absolute them so they flow & read on white. */
+ html:not(.print-pdf) .reveal .fig-cite{height:auto!important;min-height:340px!important;
+   max-height:460px!important;background-size:contain!important;
+   print-color-adjust:exact!important;-webkit-print-color-adjust:exact!important}
+ html:not(.print-pdf) .reveal .content-box,
+ html:not(.print-pdf) .reveal .content-box.pos-br,
+ html:not(.print-pdf) .reveal .content-box.pos-cl{
+   position:static!important;transform:none!important;
+   top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;
+   background:transparent!important;color:inherit!important;text-align:left!important;
+   max-width:none!important;margin:0 0 10px 0!important;padding:0!important}
+ html:not(.print-pdf) .reveal .cite{position:static!important;display:block;text-align:right;
+   background:transparent!important;color:#8a8a8a!important;margin-top:4px!important}
+ html:not(.print-pdf) .reveal .cite a{color:#8a8a8a!important}
+ ${UI_HIDE}
+}</style>`;
+  const js=`<script id="__qmd2pdf_js">
+(function(){
+ function flat(){
+  try{if(window.Reveal&&Reveal.configure)Reveal.configure({disableLayout:true,controls:false,progress:false,transition:"none"});}catch(e){}
+  var s=document.querySelectorAll(".reveal .slides section");
+  for(var i=0;i<s.length;i++){var st=s[i].style;st.display="block";st.visibility="visible";st.opacity="1";st.transform="none";st.height="auto";st.top="0";st.left="0";s[i].removeAttribute("hidden")}
+  var sl=document.querySelector(".reveal .slides");if(sl){var z=sl.style;z.transform="none";z.left="0";z.top="0";z.height="auto";z.width="auto"}
+  var fr=document.querySelectorAll(".reveal .fragment");for(var j=0;j<fr.length;j++){fr[j].classList.add("visible");fr[j].style.opacity="1";fr[j].style.visibility="visible"}
+  // reveal lazy-loads media (img[data-src], section[data-background-image]) only
+  // when a slide is visited; in a static handout that never fires, so force it.
+  var im=document.querySelectorAll("img[data-src]");for(var k=0;k<im.length;k++){im[k].src=im[k].getAttribute("data-src");im[k].removeAttribute("loading")}
+  var ss=document.querySelectorAll("source[data-srcset]");for(var q=0;q<ss.length;q++){ss[q].srcset=ss[q].getAttribute("data-srcset")}
+  var le=document.querySelectorAll('img[loading="lazy"]');for(var p=0;p<le.length;p++){le[p].loading="eager"}
+  var bg=document.querySelectorAll("[data-background-image]");for(var m=0;m<bg.length;m++){var u=bg[m].getAttribute("data-background-image");if(u&&!bg[m].style.backgroundImage){bg[m].style.backgroundImage="url('"+u+"')";bg[m].style.backgroundSize="contain";bg[m].style.backgroundRepeat="no-repeat";bg[m].style.backgroundPosition="center"}}
+ }
+ try{if(window.Reveal&&Reveal.on)Reveal.on("ready",flat)}catch(e){}
+ document.addEventListener("DOMContentLoaded",flat);window.addEventListener("load",flat);
+ var n=0,iv=setInterval(function(){flat();if(++n>25)clearInterval(iv)},80);flat();
+})();
+</script>`;
+  return css+js;
+}
+
+const types={".html":"text/html;charset=utf-8",".js":"text/javascript",".mjs":"text/javascript",
+  ".css":"text/css",".json":"application/json",".svg":"image/svg+xml",".woff":"font/woff",
+  ".woff2":"font/woff2",".ttf":"font/ttf",".png":"image/png",".jpg":"image/jpeg",
+  ".jpeg":"image/jpeg",".gif":"image/gif",".webp":"image/webp"};
+http.createServer((req,res)=>{
+  let p=decodeURIComponent(req.url.split("?")[0]); if(p==="/")p="/index.html";
+  const f=path.join(root,p);
+  if(!f.startsWith(root)){res.writeHead(403);return res.end();}
+  fs.readFile(f,(e,d)=>{
+    if(e){res.writeHead(404);return res.end();}
+    const ext=path.extname(f).toLowerCase();
+    if(ext===".html"){
+      let h=d.toString("utf8"), inj=payload(h);
+      h=h.includes("</head>")?h.replace("</head>",inj+"</head>"):inj+h;
+      d=Buffer.from(h,"utf8");
+    }
+    res.writeHead(200,{"content-type":types[ext]||"application/octet-stream"});
+    res.end(d);
+  });
+}).listen(0,"127.0.0.1",function(){console.log("PORT="+this.address().port);});
+NODE
+
+# start server in the background, wait for it to announce its ephemeral port
+PORTFILE="$(mktemp)"
+node "$SRV_JS" "$DIR" "$MODE" >"$PORTFILE" 2>/dev/null &
+SRV_PID=$!
+cleanup(){ kill "$SRV_PID" 2>/dev/null || true; rm -f "$SRV_JS" "$PORTFILE"; }
+trap cleanup EXIT
+PORT=""
+for _ in $(seq 1 50); do
+  PORT="$(sed -n 's/^PORT=//p' "$PORTFILE")"; [[ -n "$PORT" ]] && break
+  kill -0 "$SRV_PID" 2>/dev/null || break
+  sleep 0.1
+done
+[[ "$PORT" =~ ^[0-9]+$ ]] || { echo "qmd2pdf: server failed to start" >&2; exit 5; }
+
+# ---- print --------------------------------------------------------------
+# Hard timeout so a stuck render can never hang the tool. virtual-time-budget
+# lets async content (mermaid/MathJax/plotly) finish before the page is printed.
+# slides mode adds ?print-pdf (reveal's per-page layout); handout uses the plain
+# URL and relies on the injected handout CSS/JS instead.
+QUERY=""; [[ "$MODE" == slides ]] && QUERY="?print-pdf"
+echo "qmd2pdf: printing ($MODE) → $OUT" >&2
+# NB: no --user-data-dir — a fresh empty profile makes headless chromium stall
+# under --virtual-time-budget on WSL; the default per-launch temp profile is fine.
+# Software WebGL (swiftshader) instead of --disable-gpu, so WebGL/canvas content
+# (plotly maps via MapLibre, 3D scatter) actually paints into the PDF instead of
+# coming out blank. Harmless for non-WebGL decks.
+timeout 120 "$CHROME" --headless=new --no-sandbox --disable-dev-shm-usage \
+  --use-gl=angle --use-angle=swiftshader --enable-unsafe-swiftshader \
+  --hide-scrollbars --no-pdf-header-footer --virtual-time-budget="$WAIT" \
+  --print-to-pdf="$OUT" "http://127.0.0.1:$PORT/$FILE$QUERY" 2>/dev/null || true
+
+[[ -s "$OUT" ]] && { echo "qmd2pdf: done — $(du -h "$OUT" | cut -f1) $OUT" >&2; } \
+                 || { echo "qmd2pdf: FAILED (empty output)" >&2; exit 6; }
