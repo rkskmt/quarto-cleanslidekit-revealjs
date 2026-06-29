@@ -140,6 +140,28 @@
   font-family: inherit;
   font-weight: lighter;
 }
+/* Caption that annotates whatever sits directly above it — a table, a figure,
+   or a code cell's output. A bordered serif "legend" chip, deliberately unlike
+   the sans-serif body bullets, so trailing explanation never reads as another
+   main point. System fonts only, NO web-font download: Latin → Georgia,
+   Japanese → an installed mincho if present else the generic serif fallback. */
+.reveal .caption-note {
+  text-align: center;
+  margin-top: 0.3em;             /* small, element-agnostic gap (table OR code output above) */
+  margin-bottom: 0.6em;
+}
+.reveal .caption-note p {
+  display: inline-block;
+  margin: 0 !important;
+  padding: 0.3em 1.2em;
+  border: 1px solid #c7ccd4;
+  border-radius: 8px;
+  background: #f7f8fa;
+  font-family: Georgia, Cambria, "Times New Roman", "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif CJK JP", serif !important;
+  font-size: 0.72em !important;
+  color: #444 !important;
+  font-weight: normal !important;
+}
 .fig-small img {
   max-height: 300px !important;
 }
@@ -148,6 +170,8 @@
 }
 table {
   width: 100%;
+  margin-top: 1.1em !important;     /* vertical breathing room — reveal sets table{margin:auto} → 0 top/bottom */
+  margin-bottom: 1.1em !important;
   border-bottom: none !important;
 }
 .reveal table.dataframe {
