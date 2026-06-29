@@ -35,7 +35,8 @@ and copied next to your rendered deck automatically.
 - `theme.scss` — clean-derived reveal theme (1280×720, github code highlighting).
 - `custom.css` — typography and slide layout, including a `.en` / `.en.abbr`
   span style for English co-notation of Japanese terms
-  (`過学習（[overfitting]{.en}）`, `DNN（[Deep Neural Network]{.en .abbr}）`).
+  (`過学習（[overfitting]{.en}）`, `DNN（[Deep Neural Network]{.en .abbr}）`),
+  plus a **lecture-index card grid** for index / TOC pages (see [Lecture index](#lecture-index)).
 
 **UI kit (plain ES modules, no build step)**
 - `slide-ui.js` — slide body layout helpers.
@@ -49,6 +50,49 @@ and copied next to your rendered deck automatically.
 - `cite-image.lua` — clean `image + citation` syntax.
 - `plotly-iframe.lua` — embed a Plotly HTML export as a sized iframe via a
   `.plotly-iframe` div (`src`, `width`, `height` attributes).
+
+## Lecture index
+
+`custom.css` ships a card-grid component for an **index / table-of-contents page**.
+Each lecture is a numbered card, grouped into colour-coded categories, with an
+optional companion **handouts page** for PDF downloads. No inline CSS — just classes:
+
+````markdown
+## My course
+
+[PDF](handouts.qmd){.pdf-gate}          <!-- top-right gate → handouts page -->
+
+:::: {.lectures}
+
+### Getting started {.sec .cat1}
+::: {.grid .cat1}
+- [Lecture one](lecture-one.qmd)
+- [Lecture two](lecture-two.qmd)
+:::
+
+### Going deeper {.sec .cat2}
+::: {.grid .cat2}
+- [Lecture three](lecture-three.qmd)
+:::
+
+### Appendix {.sec}
+::: {.grid .app}
+- [Extra material](extra.qmd)
+:::
+
+::::
+````
+
+- **Auto-numbered** — `01, 02, …` via a CSS counter (continuous across categories,
+  survives reordering — don't put numbers in the link text).
+- **Per-category colour** — `.cat1`–`.cat5` (blue / green / amber / purple / pink);
+  put the same `.catN` on both the `### {.sec}` header and its `::: {.grid}`.
+- **`.app`** — an un-numbered (`◦`) group for appendix / reference items.
+- **Handouts page** — a sibling `handouts.qmd` with the same grid but
+  `::: {.grid .catN .dl}` linking PDFs; `.dl` adds a PDF doc icon, and the
+  `.pdf-gate` link on the index points to it. (Generate the PDFs with
+  [`tools/qmd2pdf`](tools/).)
+- Add a `<div id="lecture-search">…</div>` for the in-deck search box on the index.
 
 ## Defaults you may want to override
 
