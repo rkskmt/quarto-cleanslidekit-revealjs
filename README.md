@@ -33,15 +33,17 @@ and copied next to your rendered deck automatically.
 
 **Theme & layout**
 - `theme.scss` — clean-derived reveal theme (1280×720, github code highlighting).
-- `custom.css` — typography and slide layout, including a `.en` / `.en.abbr`
-  span style for English co-notation of Japanese terms
-  (`過学習（[overfitting]{.en}）`, `DNN（[Deep Neural Network]{.en .abbr}）`),
+- `custom.css` — typography and slide layout, including a `.en` span style for
+  English co-notation of Japanese terms (`過学習（[overfitting]{.en}）`; for an
+  abbreviation spell-out, bold it: `DNN（[**Deep Neural Network**]{.en}）`),
   plus a **lecture-index card grid** for index / TOC pages (see [Lecture index](#lecture-index)).
 
 **UI kit (plain ES modules, no build step)**
-- `slide-ui.js` — slide body layout helpers.
+- `slide-ui.js` — slide chrome: footer nav counter, code copy/zoom buttons, home button.
 - `search-ui.js` — in-deck text search.
 - `peek-ui.js` — slide peek / overview navigation.
+- `badge-ui.js` — rosette title-corner badges via slide classes
+  (`{.badge-important}` / `{.badge-practice}` / `{.badge-fyi}`, plus `-ja` variants).
 
 **Lua filters**
 - `slide-body.lua` — slide body / column layout classes.
