@@ -44,6 +44,11 @@ and copied next to your rendered deck automatically.
 - `peek-ui.js` — slide peek / overview navigation.
 - `badge-ui.js` — rosette title-corner badges via slide classes
   (`{.badge-important}` / `{.badge-practice}` / `{.badge-fyi}`, plus `-ja` variants).
+- `toc-ui.js` — slide list drawer for fast navigation in long decks: a list
+  button (bottom-right, above Home) or <kbd>t</kbd> / <kbd>Ctrl+L</kbd> opens a
+  scrollable list of all slide titles built straight from the DOM (no
+  rendering); <kbd>↑</kbd><kbd>↓</kbd> + <kbd>Enter</kbd> to jump, <kbd>Esc</kbd>
+  to close. Break slides show as section dividers, badge slides get a colored dot.
 
 **Lua filters**
 - `slide-body.lua` — slide body / column layout classes.
