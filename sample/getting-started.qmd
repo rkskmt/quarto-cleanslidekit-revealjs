@@ -1,0 +1,65 @@
+---
+title: "Getting started"
+subtitle: "What machine learning is — and is not"
+---
+
+## What is machine learning?
+
+- Programs that improve from ==data== instead of hand-written rules
+- Three main flavors:
+  - **Supervised** learning — learn from labeled examples
+  - **Unsupervised** learning — find structure without labels
+  - **Reinforcement** learning — learn from rewards
+
+::: {.callout-note title="Vocabulary"}
+A **model** is a function with tunable parameters; **training** means finding
+parameters that fit the data.
+:::
+
+## The workflow {.badge-important}
+
+1. Collect and clean data
+2. Split into **train** / **test** sets
+3. Fit a model on the training set
+4. Evaluate on the *held-out* test set
+
+::: {.caption-note}
+Never evaluate on the data you trained on — that only measures memorization.
+:::
+
+## Overfitting
+
+- A model can be **too flexible**: it memorizes noise instead of learning signal
+- Symptom: great on training data, ==poor on new data==
+- Cure: more data, simpler models, regularization
+
+## {background-color="white" .center .break-slide}
+
+::: {.break-title}
+Your first experiment
+:::
+
+## Hands-on: iris dataset {.badge-practice}
+
+::: {.prompt}
+Train a classifier on the iris dataset and report its test accuracy.
+:::
+
+```python
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+
+X, y = load_iris(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+clf = KNeighborsClassifier(n_neighbors=3)
+clf.fit(X_train, y_train)
+print(clf.score(X_test, y_test))
+```
+
+## Where to go next {.badge-fyi}
+
+- [Gradient descent](gradient-descent.qmd) — how models actually learn
+- [Linear regression](linear-regression.qmd) — the simplest useful model
+- scikit-learn user guide — excellent worked examples

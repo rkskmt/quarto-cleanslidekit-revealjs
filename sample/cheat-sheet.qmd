@@ -1,0 +1,17 @@
+---
+title: "Cheat sheet"
+subtitle: "Formulas and rules of thumb"
+---
+
+## Formulas
+
+- Mean squared error: $L = \frac{1}{n}\sum_i (\hat{y}_i - y_i)^2$
+- Gradient step: $\theta \leftarrow \theta - \eta \nabla L$
+- Ridge objective: $\|Xw - y\|^2 + \lambda\|w\|^2$
+
+## Rules of thumb
+
+- Always keep a ==held-out test set== — no exceptions
+- Diverging loss → learning rate too large
+- Great train / poor test accuracy → overfitting: simplify or regularize
+- Tune hyperparameters on a **validation** split, never the test set

@@ -1,0 +1,32 @@
+## Machine Learning 101
+
+::: {.idx-lead}
+A hands-on introduction to machine learning — 4 lectures plus reference
+material. Sample course for the CleanSlideKit theme.
+:::
+
+<div id="lecture-search">
+  <input id="search-input" type="search" placeholder="Full-text search — find which lecture covered it (e.g. gradient, overfitting)" autocomplete="off">
+  <div id="search-results" class="search-ui-results"></div>
+</div>
+
+:::: {.lectures}
+
+### Foundations {.sec .cat1}
+::: {.grid .cat1}
+- [Getting started](getting-started.qmd)
+- [Gradient descent](gradient-descent.qmd)
+:::
+
+### Models {.sec .cat2}
+::: {.grid .cat2}
+- [Linear regression](linear-regression.qmd)
+- [Neural networks](neural-networks.qmd)
+:::
+
+### Reference {.sec}
+::: {.grid .app}
+- [Cheat sheet](cheat-sheet.qmd)
+:::
+
+::::

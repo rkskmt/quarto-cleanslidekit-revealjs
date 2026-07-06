@@ -1,0 +1,9 @@
+project:
+  type: website
+  render:
+    - "*.qmd"
+  resources:
+    - "favicon.svg"
+
+website:
+  title: "Machine Learning 101"

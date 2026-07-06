@@ -1,0 +1,12 @@
+/.quarto/
+**/*.quarto_ipynb
+/_site/
+
+# format-resources copied next to the sources on render (the sources live
+# in ../_extensions/cleanslidekit/ — these copies are build output only)
+/custom.css
+/slide-ui.js
+/search-ui.js
+/peek-ui.js
+/badge-ui.js
+/toc-ui.js

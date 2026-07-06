@@ -3,6 +3,8 @@
 *_files/
 example.html
 /_site/
+/sample/.quarto/
+/sample/_site/
 
 # format-resources copied next to example.html on render (the sources live in
 # _extensions/cleanslidekit/ — these root copies are build output only)

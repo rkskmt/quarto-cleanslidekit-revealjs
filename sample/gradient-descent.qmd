@@ -1,0 +1,81 @@
+---
+title: "Gradient descent"
+subtitle: "How models learn, one small step at a time"
+---
+
+## Recap
+
+- Last time: fitting a line by solving the
+  [normal equation](linear-regression.qmd#normal-equation){.peek} directly
+- Works great — until the model has ==millions of parameters==
+- Today: an *iterative* recipe that scales
+
+## The idea {.badge-important}
+
+- Standing on a hillside in fog, you can still walk downhill:
+  feel the slope under your feet, step **against** it
+- The loss $L(\theta)$ is the hill; the gradient $\nabla L$ is the slope
+
+$$\theta_{t+1} = \theta_t - \eta \, \nabla L(\theta_t)$$
+
+- The learning rate $\eta$ controls the ==step size==
+
+## A minimal implementation
+
+```python
+import numpy as np
+
+def gradient_descent(grad, theta0, lr=0.1, steps=100):
+    """Minimize a function given its gradient."""
+    theta = np.asarray(theta0, dtype=float)
+    history = [theta.copy()]
+    for _ in range(steps):
+        theta -= lr * grad(theta)
+        history.append(theta.copy())
+    return theta, np.array(history)
+
+# minimize f(x, y) = x^2 + 10 y^2
+grad = lambda t: np.array([2 * t[0], 20 * t[1]])
+theta, path = gradient_descent(grad, theta0=[9.0, 2.0], lr=0.08)
+print(theta)          # -> close to [0, 0]
+print(len(path))      # -> 101 positions visited
+```
+
+## **Tweak** Watch it succeed — and fail {.badge-practice}
+
+Re-run the code, changing one thing at a time:
+
+::: {.tweak}
+| Goal | Edit |
+|--|--|
+| Take bigger steps | `lr=0.08` → `lr=0.15` |
+| Overshoot and diverge | `lr=0.08` → `lr=0.25` |
+| Start from somewhere else | `theta0=[9.0, 2.0]` → `theta0=[-4.0, 1.5]` |
+| Run longer | `steps=100` → `steps=1000` |
+:::
+
+::: {.callout-tip}
+Diverging loss almost always means the learning rate is too large. Halve it
+and try again.
+:::
+
+## {background-color="white" .center .break-slide}
+
+::: {.break-title}
+Beyond vanilla gradient descent
+:::
+
+## Variants
+
+- **Stochastic** gradient descent — estimate the gradient from a mini-batch
+- **Momentum** — keep a running average of past gradients
+- **Adam** — per-parameter adaptive step sizes; the default in deep learning
+
+::: {.callout-important title="Quiz"}
+Why does mini-batching make each step *cheaper* but *noisier*?
+:::
+
+## Further reading {.badge-fyi}
+
+- Ruder (2016), *An overview of gradient descent optimization algorithms*
+- The [neural networks](neural-networks.qmd) lecture builds directly on this
