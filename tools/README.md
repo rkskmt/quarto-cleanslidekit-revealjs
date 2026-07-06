@@ -4,6 +4,12 @@ These are **author/maintainer tools**, not part of the Quarto extension. They ar
 **not** installed by `quarto add` (which only copies `_extensions/`), so users of
 the theme never download them. Run them from a clone of this repo.
 
+## record-gifs.js
+
+Re-records the README demo GIFs from the [`sample/`](../sample/) course with
+playwright-core (see the usage comment at the top of the script). Run it after
+UI changes so the GIFs stay honest.
+
 ## qmd2pdf
 
 Turn a CleanSlideKit (or any reveal.js) Quarto deck into a real, vector,
