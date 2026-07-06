@@ -100,6 +100,34 @@ optional companion **handouts page** for PDF downloads. No inline CSS — just c
   `.pdf-gate` link on the index points to it. (Generate the PDFs with
   [`tools/qmd2pdf`](tools/).)
 - Add a `<div id="lecture-search">…</div>` for the in-deck search box on the index.
+- **Term tabs** — to split a long index (e.g. two semesters) without stacking
+  everything on one slide, wrap the grids in Quarto's native tabset;
+  `custom.css` restyles it into a compact segmented control:
+
+  ````markdown
+  :::: {.panel-tabset}
+
+  ### 前期
+
+  ::: {.lectures}
+  …first-term grids…
+  :::
+
+  ### 後期
+
+  ::: {.lectures}
+  …second-term grids…
+  :::
+
+  ::::
+  ````
+
+  Only headings that are **direct children** of the tabset become tabs — the
+  `### {.sec}` category headers inside `.lectures` divs are untouched. Works in
+  any deck, not just the index (Quarto ships the tab JS automatically).
+  The selected tab is **remembered per page** (localStorage, via
+  `slide-ui.js`), so leaving the index from its second tab and coming back
+  restores that tab.
 
 ## Defaults you may want to override
 

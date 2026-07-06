@@ -32,6 +32,40 @@ Export a Plotly figure to HTML, then embed it sized:
 ::: {.plotly-iframe src="my-figure.html" width="900" height="520"}
 :::
 
+## Compact tabset
+
+Quarto's native `.panel-tabset`, restyled as a small segmented control —
+handy for splitting an index page by term:
+
+:::: {.panel-tabset}
+
+### 前期
+
+::: {.lectures}
+
+### Getting started {.sec .cat1}
+
+::: {.grid .cat1}
+- [Lecture one](example.qmd)
+- [Lecture two](example.qmd)
+:::
+
+:::
+
+### 後期
+
+::: {.lectures}
+
+### Going deeper {.sec .cat4}
+
+::: {.grid .cat4}
+- [Lecture three](example.qmd)
+:::
+
+:::
+
+::::
+
 ## UI kit
 
 This deck ships `peek-ui.js` (overview), `search-ui.js` (in-deck search), and
