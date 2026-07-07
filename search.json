@@ -1,0 +1,170 @@
+[
+  {
+    "objectID": "neural-networks.html#recap",
+    "href": "neural-networks.html#recap",
+    "title": "Neural networks",
+    "section": "Recap",
+    "text": "Recap\n\n\nGradient descent minimizes any differentiable loss\nLinear regression is a single linear layer — let’s stack more"
+  },
+  {
+    "objectID": "neural-networks.html#one-unit",
+    "href": "neural-networks.html#one-unit",
+    "title": "Neural networks",
+    "section": "One unit",
+    "text": "One unit\n\n\nA unit computes a weighted sum, then a nonlinearity:\n\n\\[h = \\sigma(w^\\top x + b)\\]\n\nWithout \\(\\sigma\\), stacking layers collapses back into one linear map\nPopular choices: ReLU, sigmoid, tanh"
+  },
+  {
+    "objectID": "neural-networks.html#a-two-layer-network",
+    "href": "neural-networks.html#a-two-layer-network",
+    "title": "Neural networks",
+    "section": "A two-layer network",
+    "text": "A two-layer network\n\nimport numpy as np\n\ndef relu(z):\n    return np.maximum(0, z)\n\ndef forward(x, W1, b1, W2, b2):\n    h = relu(W1 @ x + b1)     # hidden layer\n    return W2 @ h + b2        # output layer\n\nx = np.array([1.0, -0.5])\nW1 = np.array([[0.3, -1.2], [0.8, 0.4], [-0.5, 0.9]])\nb1 = np.zeros(3)\nW2 = np.array([[1.0, -0.7, 0.2]])\nb2 = np.zeros(1)\nprint(forward(x, W1, b1, W2, b2))"
+  },
+  {
+    "objectID": "neural-networks.html#training",
+    "href": "neural-networks.html#training",
+    "title": "Neural networks",
+    "section": "Training",
+    "text": "Training\n\n\nSame recipe as before: define a loss, follow its gradient\nBackpropagation computes the gradient layer by layer via the chain rule\nFrameworks (PyTorch, JAX) automate this — you write only forward\n\n\n\n\n\n\n\nTip\n\n\nIf training stalls, check the learning rate first, then the data pipeline. The model is rarely the problem."
+  },
+  {
+    "objectID": "index.html#machine-learning-101",
+    "href": "index.html#machine-learning-101",
+    "title": "Machine Learning 101",
+    "section": "Machine Learning 101",
+    "text": "Machine Learning 101\n\n\nA hands-on introduction to machine learning — 4 lectures plus reference material. Sample course for the CleanSlideKit theme.\n\n\n\n\n\n\n\n\n\nFoundations\n\n\n\nGetting started\nGradient descent\n\n\n\nModels\n\n\n\nLinear regression\nNeural networks\n\n\n\nReference\n\n\n\nCheat sheet"
+  },
+  {
+    "objectID": "getting-started.html#what-is-machine-learning",
+    "href": "getting-started.html#what-is-machine-learning",
+    "title": "Getting started",
+    "section": "What is machine learning?",
+    "text": "What is machine learning?\n\n\nPrograms that improve from data instead of hand-written rules\nThree main flavors:\n\nSupervised learning — learn from labeled examples\nUnsupervised learning — find structure without labels\nReinforcement learning — learn from rewards\n\n\n\n\n\n\n\n\n\nVocabulary\n\n\nA model is a function with tunable parameters; training means finding parameters that fit the data."
+  },
+  {
+    "objectID": "getting-started.html#the-workflow",
+    "href": "getting-started.html#the-workflow",
+    "title": "Getting started",
+    "section": "The workflow",
+    "text": "The workflow\n\n\nCollect and clean data\nSplit into train / test sets\nFit a model on the training set\nEvaluate on the held-out test set\n\n\nNever evaluate on the data you trained on — that only measures memorization."
+  },
+  {
+    "objectID": "getting-started.html#overfitting",
+    "href": "getting-started.html#overfitting",
+    "title": "Getting started",
+    "section": "Overfitting",
+    "text": "Overfitting\n\n\nA model can be too flexible: it memorizes noise instead of learning signal\nSymptom: great on training data, poor on new data\nCure: more data, simpler models, regularization"
+  },
+  {
+    "objectID": "getting-started.html#section",
+    "href": "getting-started.html#section",
+    "title": "Getting started",
+    "section": "",
+    "text": "Your first experiment"
+  },
+  {
+    "objectID": "getting-started.html#hands-on-iris-dataset",
+    "href": "getting-started.html#hands-on-iris-dataset",
+    "title": "Getting started",
+    "section": "Hands-on: iris dataset",
+    "text": "Hands-on: iris dataset\n\n\nTrain a classifier on the iris dataset and report its test accuracy.\n\nfrom sklearn.datasets import load_iris\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.neighbors import KNeighborsClassifier\n\nX, y = load_iris(return_X_y=True)\nX_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)\n\nclf = KNeighborsClassifier(n_neighbors=3)\nclf.fit(X_train, y_train)\nprint(clf.score(X_test, y_test))"
+  },
+  {
+    "objectID": "getting-started.html#where-to-go-next",
+    "href": "getting-started.html#where-to-go-next",
+    "title": "Getting started",
+    "section": "Where to go next",
+    "text": "Where to go next\n\n\nGradient descent — how models actually learn\nLinear regression — the simplest useful model\nscikit-learn user guide — excellent worked examples"
+  },
+  {
+    "objectID": "cheat-sheet.html#formulas",
+    "href": "cheat-sheet.html#formulas",
+    "title": "Cheat sheet",
+    "section": "Formulas",
+    "text": "Formulas\n\n\nMean squared error: \\(L = \\frac{1}{n}\\sum_i (\\hat{y}_i - y_i)^2\\)\nGradient step: \\(\\theta \\leftarrow \\theta - \\eta \\nabla L\\)\nRidge objective: \\(\\|Xw - y\\|^2 + \\lambda\\|w\\|^2\\)"
+  },
+  {
+    "objectID": "cheat-sheet.html#rules-of-thumb",
+    "href": "cheat-sheet.html#rules-of-thumb",
+    "title": "Cheat sheet",
+    "section": "Rules of thumb",
+    "text": "Rules of thumb\n\n\nAlways keep a held-out test set — no exceptions\nDiverging loss → learning rate too large\nGreat train / poor test accuracy → overfitting: simplify or regularize\nTune hyperparameters on a validation split, never the test set"
+  },
+  {
+    "objectID": "gradient-descent.html#recap",
+    "href": "gradient-descent.html#recap",
+    "title": "Gradient descent",
+    "section": "Recap",
+    "text": "Recap\n\n\nLast time: fitting a line by solving the normal equation directly\nWorks great — until the model has millions of parameters\nToday: an iterative recipe that scales"
+  },
+  {
+    "objectID": "gradient-descent.html#the-idea",
+    "href": "gradient-descent.html#the-idea",
+    "title": "Gradient descent",
+    "section": "The idea",
+    "text": "The idea\n\n\nStanding on a hillside in fog, you can still walk downhill: feel the slope under your feet, step against it\nThe loss \\(L(\\theta)\\) is the hill; the gradient \\(\\nabla L\\) is the slope\n\n\\[\\theta_{t+1} = \\theta_t - \\eta \\, \\nabla L(\\theta_t)\\]\n\nThe learning rate \\(\\eta\\) controls the step size"
+  },
+  {
+    "objectID": "gradient-descent.html#a-minimal-implementation",
+    "href": "gradient-descent.html#a-minimal-implementation",
+    "title": "Gradient descent",
+    "section": "A minimal implementation",
+    "text": "A minimal implementation\n\nimport numpy as np\n\ndef gradient_descent(grad, theta0, lr=0.1, steps=100):\n    \"\"\"Minimize a function given its gradient.\"\"\"\n    theta = np.asarray(theta0, dtype=float)\n    history = [theta.copy()]\n    for _ in range(steps):\n        theta -= lr * grad(theta)\n        history.append(theta.copy())\n    return theta, np.array(history)\n\n# minimize f(x, y) = x^2 + 10 y^2\ngrad = lambda t: np.array([2 * t[0], 20 * t[1]])\ntheta, path = gradient_descent(grad, theta0=[9.0, 2.0], lr=0.08)\nprint(theta)          # -&gt; close to [0, 0]\nprint(len(path))      # -&gt; 101 positions visited"
+  },
+  {
+    "objectID": "gradient-descent.html#tweak-watch-it-succeed-and-fail",
+    "href": "gradient-descent.html#tweak-watch-it-succeed-and-fail",
+    "title": "Gradient descent",
+    "section": "Tweak Watch it succeed — and fail",
+    "text": "Tweak Watch it succeed — and fail\n\nRe-run the code, changing one thing at a time:\n\n\n\n\n\n\n\n\nGoal\nEdit\n\n\n\n\nTake bigger steps\nlr=0.08 → lr=0.15\n\n\nOvershoot and diverge\nlr=0.08 → lr=0.25\n\n\nStart from somewhere else\ntheta0=[9.0, 2.0] → theta0=[-4.0, 1.5]\n\n\nRun longer\nsteps=100 → steps=1000\n\n\n\n\n\n\n\n\n\n\nTip\n\n\nDiverging loss almost always means the learning rate is too large. Halve it and try again."
+  },
+  {
+    "objectID": "gradient-descent.html#section",
+    "href": "gradient-descent.html#section",
+    "title": "Gradient descent",
+    "section": "",
+    "text": "Beyond vanilla gradient descent"
+  },
+  {
+    "objectID": "gradient-descent.html#variants",
+    "href": "gradient-descent.html#variants",
+    "title": "Gradient descent",
+    "section": "Variants",
+    "text": "Variants\n\n\nStochastic gradient descent — estimate the gradient from a mini-batch\nMomentum — keep a running average of past gradients\nAdam — per-parameter adaptive step sizes; the default in deep learning\n\n\n\n\n\n\n\n\nQuiz\n\n\nWhy does mini-batching make each step cheaper but noisier?"
+  },
+  {
+    "objectID": "gradient-descent.html#further-reading",
+    "href": "gradient-descent.html#further-reading",
+    "title": "Gradient descent",
+    "section": "Further reading",
+    "text": "Further reading\n\n\nRuder (2016), An overview of gradient descent optimization algorithms\nThe neural networks lecture builds directly on this"
+  },
+  {
+    "objectID": "linear-regression.html#the-model",
+    "href": "linear-regression.html#the-model",
+    "title": "Linear regression",
+    "section": "The model",
+    "text": "The model\n\n\nPredict a number as a weighted sum of inputs:\n\n\\[\\hat{y} = w_1 x_1 + w_2 x_2 + \\dots + w_d x_d + b\\]\n\nFitting = choosing \\(w, b\\) that minimize the mean squared error\n\n\\[L(w, b) = \\frac{1}{n} \\sum_{i=1}^{n} \\left( \\hat{y}_i - y_i \\right)^2\\]"
+  },
+  {
+    "objectID": "linear-regression.html#normal-equation",
+    "href": "linear-regression.html#normal-equation",
+    "title": "Linear regression",
+    "section": "The normal equation",
+    "text": "The normal equation\n\n\nFor linear regression the minimum has a closed form:\n\n\\[\\hat{w} = (X^\\top X)^{-1} X^\\top y\\]\n\nOne line of algebra, one line of code — no iteration needed\nCost is \\(O(d^3)\\) in the number of features: fine for hundreds, hopeless for millions"
+  },
+  {
+    "objectID": "linear-regression.html#in-code",
+    "href": "linear-regression.html#in-code",
+    "title": "Linear regression",
+    "section": "In code",
+    "text": "In code\n\nimport numpy as np\n\nrng = np.random.default_rng(0)\nX = rng.normal(size=(200, 3))\ny = X @ np.array([2.0, -1.0, 0.5]) + 0.1 * rng.normal(size=200)\n\n# normal equation with a bias column\nXb = np.hstack([X, np.ones((200, 1))])\nw = np.linalg.solve(Xb.T @ Xb, Xb.T @ y)\nprint(w)   # -&gt; [ 2.0, -1.0, 0.5, ~0.0 ]"
+  },
+  {
+    "objectID": "linear-regression.html#regularization",
+    "href": "linear-regression.html#regularization",
+    "title": "Linear regression",
+    "section": "Regularization",
+    "text": "Regularization\n\n\nWith many features, plain least squares overfits\nRidge regression shrinks weights toward zero:\n\n\\[L(w) = \\|Xw - y\\|^2 + \\lambda \\|w\\|^2\\]\n\nThe penalty strength λ is a hyperparameter — tune it on a validation set, never on the test set."
+  }
+]
