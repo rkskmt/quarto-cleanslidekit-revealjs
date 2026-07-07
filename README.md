@@ -1,15 +1,20 @@
 # CleanSlideKit RevealJS
 
+[![Open the live sample course in your browser](doc/gif/index-nav.gif)](https://rkskmt.github.io/quarto-cleanslidekit-revealjs/)
+
+**A Quarto reveal.js theme for building lecture & class materials.** It pairs a
+clean slide design with a complete, batteries-included classroom UI — installed
+with one `quarto add`, zero configuration, no build step.
+
+<p align="center"><a href="https://rkskmt.github.io/quarto-cleanslidekit-revealjs/"><ins><b>▶ Try the live demo →</b></ins></a></p>
+
+> The full sample course, running in your browser — a real reveal.js deck, not
+> a video. Press <kbd>t</kbd> for the slide list, <kbd>Ctrl</kbd>+<kbd>F</kbd> to
+> search across every lecture, and click a code block's **⤢** to zoom.
+
 [![version](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fraw.githubusercontent.com%2Frkskmt%2Fquarto-cleanslidekit-revealjs%2Fmain%2F_extensions%2Fcleanslidekit%2F_extension.yml&query=%24.version&label=version&color=blue)](_extensions/cleanslidekit/_extension.yml)
 ![quarto](https://img.shields.io/badge/quarto-%E2%89%A5%201.4-75AADB)
 ![license](https://img.shields.io/badge/license-MIT-green)
-
-**A batteries-included Quarto reveal.js format for teaching.** One
-`quarto add` gets you a clean theme *plus* a complete classroom UI — a
-slide-list drawer, site-wide search, cross-deck slide peek, full-screen code
-zoom, course-index card grids, real-PDF handouts — with **zero configuration
-and no build step**. Distilled from a real, in-production AI / data-science
-lecture series: every feature here exists because a classroom needed it.
 
 The theme is derived from [`clean`](https://github.com/grantmcdermott/quarto-revealjs-clean)
 by Grant McDermott; everything else (the UI kit, Lua filters, JP typography)
