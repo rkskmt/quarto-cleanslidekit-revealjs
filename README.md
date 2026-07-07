@@ -55,14 +55,14 @@ recorded from the latter.
   as buttons.
 - 🏵️ **Rosette badges** — mark slides *important / practice / FYI* with one
   class; badges also show as colored dots in the slide list.
-- ✍️ **Authoring shorthands** — seven Lua filters for `==highlights==`,
+- ✍️ **Authoring shorthands** — six Lua filters for `==highlights==`,
   image + citation slides, figure scaling, Plotly embeds, and more.
 - 🗂️ **Course index pages** — an auto-numbered, color-coded card grid for
   your lecture list, plus a matching handouts page.
 - 📄 **Real-PDF handouts** — an author-side tool that prints decks to
   vector, selectable-text PDFs (handout or one-per-slide mode).
-- 🇯🇵 **Japanese-first, English-ready** — `lang: ja` defaults, full-width-colon
-  alignment, an `.en` style for English co-notation; all UI strings switch
+- 🇯🇵 **Japanese-first, English-ready** — `lang: ja` defaults, an `.en` style
+  for English co-notation; all UI strings switch
   between Japanese and English with the document `lang`.
 
 ---
@@ -104,7 +104,7 @@ the current slide is highlighted and scrolled into view.
 
 A search button on every deck (or <kbd>Ctrl+F</kbd> / <kbd>/</kbd>) opens a
 modal that searches the **entire course** via Quarto's generated
-`search.json` — students can find "過学習" across all lectures without
+`search.json` — students can find "overfitting" across all lectures without
 knowing which deck it was in. An inline `#search-input` / `#search-results`
 pair on the index page is wired up automatically if present.
 
@@ -113,7 +113,7 @@ pair on the index page is wired up automatically if present.
 ### Slide peek (`peek-ui.js`)
 
 ```markdown
-[前回の復習](other-deck.qmd#slide-id){.peek}
+[Last week's recap](other-deck.qmd#slide-id){.peek}
 ```
 
 opens **that one slide** from another deck in a modal overlay. The target
@@ -122,7 +122,7 @@ everything — renders exactly as in the original. But all navigation inside
 the peek is disabled: students glance, remember, close (<kbd>Esc</kbd> /
 backdrop / ×), and are right back where they were — no wandering off into
 another deck mid-lecture. Give the target slide an explicit id:
-`## 見出し {#slide-id}`.
+`## Heading {#slide-id}`.
 
 ![Slide peek: one slide from another deck, fully rendered, in a modal](doc/gif/peek.gif)
 
@@ -138,9 +138,9 @@ Perfect for "can you see the back row?" moments.
 ### Rosette badges (`badge-ui.js`)
 
 ```markdown
-## 大事なスライド {.badge-important}
-## 演習 {.badge-practice-ja}
-## 参考 {.badge-fyi .badge-important}   <!-- badges stack side by side -->
+## Important slide {.badge-important}
+## Exercise {.badge-practice-ja}
+## FYI {.badge-fyi .badge-important}   <!-- badges stack side by side -->
 ```
 
 Puts a scalloped rosette badge at the title's right shoulder — SVG generated
@@ -152,14 +152,13 @@ Japanese word in the center.
 
 ## Authoring shorthands (Lua filters)
 
-Seven self-contained filters, active out of the box:
+Six self-contained filters, active out of the box:
 
 | Write | Get | Filter |
 |---|---|---|
-| `==誤差逆伝播==`, `==multi word too==` | inline highlight (white-on-blue marker); phrases may span spaces, a literal `a == b` stays untouched | `hl.lua` |
-| `## **Tweak**：見出し` | the bolded word becomes a label chip in the title (works with any word) | — (CSS) |
+| `==backpropagation==`, `==multi word too==` | inline highlight (white-on-blue marker); phrases may span spaces, a literal `a == b` stays untouched | `hl.lua` |
+| `## **Tweak** Heading` | the bolded word becomes a label chip in the title (works with any word) | — (CSS) |
 | `過学習（[overfitting]{.en}）` | English co-notation typography; bold inside for spell-outs: `DNN（[**Deep Neural Network**]{.en}）` | — (CSS) |
-| `：` anywhere | full-width colons aligned consistently (JP) | `fw-colon.lua` |
 | `::: {.fig-cite src="img.png" height="400px"}` + nested `::: {.cite}` | sized image with a source-citation line | `cite-image.lua` |
 | `## {.bg-cover src="img.png"}` | full-bleed background-image slide (+ `.cite` for the credit) | `cite-image.lua` |
 | `::: {.fig width="50%"}` around a code cell | scales the *computed* figure — revealjs normally drops `out-width` for these | `figscale.lua` |
@@ -181,10 +180,10 @@ classes, no inline styles:
 
   ```markdown
   ::: {.tweak}
-  | やりたいこと | コード |
+  | Goal | Code |
   |--|--|
-  | 長く学習させる | `range(1, 4)` → `range(1, 9)` |
-  | 中間を太くする | `128` → `512` |
+  | Train longer | `range(1, 4)` → `range(1, 9)` |
+  | Widen the hidden layer | `128` → `512` |
   :::
   ```
 
@@ -198,7 +197,7 @@ classes, no inline styles:
   small "Result" tag, visually distinct from source code.
 - **Callouts, restyled** — Quarto callouts get solid colored header bars
   with white text/icons, tuned for slide contrast.
-- **Code-fold as button** — `code-fold` summaries ("解答例を見る") render as
+- **Code-fold as button** — `code-fold` summaries ("Show the answer") render as
   an obvious clickable button.
 - **Compact tabsets** — Quarto's native `.panel-tabset` restyled as a small
   segmented control, with the selected tab remembered per page.
@@ -251,13 +250,13 @@ color-coded lecture cards — no inline CSS, just classes:
   ````markdown
   :::: {.panel-tabset}
 
-  ### 前期
+  ### First term
 
   ::: {.lectures}
   …first-term grids…
   :::
 
-  ### 後期
+  ### Second term
 
   ::: {.lectures}
   …second-term grids…
