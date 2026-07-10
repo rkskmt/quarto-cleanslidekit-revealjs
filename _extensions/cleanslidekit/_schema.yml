@@ -74,7 +74,7 @@ classes:
   dl:
     description: "On a `.grid`, styles the links as PDF downloads (adds a PDF document icon); used on the handouts page."
   pdf-gate:
-    description: "On an index link, a top-right gate that points to the handouts page."
+    description: "On an index link, a top-right gate that points to the handouts page. Rendered only when pdf/ next to the input file holds at least one PDF; otherwise card-grid.lua drops the link."
 
 attributes:
   ".fig-cite":

@@ -242,7 +242,9 @@ color-coded lecture cards — no inline CSS, just classes:
 - **Handouts page** — a sibling `handouts.qmd` with the same grid but
   `::: {.grid .catN .dl}` linking PDFs; `.dl` adds a PDF doc icon, and the
   `.pdf-gate` link on the index points to it. (Generate the PDFs with
-  [`tools/qmd2pdf`](tools/).)
+  [`tools/qmd2pdf`](tools/).) The badge is gated at render time: if `pdf/`
+  next to the index holds no PDF (fresh clone, or a course without handouts
+  yet), the link is dropped from the output — safe to leave in `index.qmd`.
 - **Term tabs** — split a long index (e.g. two semesters) by wrapping the
   grids in Quarto's native tabset; it renders as a compact segmented control
   and the selected term is remembered when students come back:
