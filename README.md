@@ -201,6 +201,9 @@ classes, no inline styles:
   an obvious clickable button.
 - **Compact tabsets** — Quarto's native `.panel-tabset` restyled as a small
   segmented control, with the selected tab remembered per page.
+- **Scroll hint** — the first time a slide taller than the frame is shown,
+  a chevron dips twice at the bottom center and fades out, signalling
+  there's more below. Scrolling dismisses it; once per slide per visit.
 
 ## Lecture index
 
