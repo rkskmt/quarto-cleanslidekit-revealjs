@@ -283,7 +283,8 @@ tools/qmd2pdf deck.html --no-render    # print an already-built .html
 
 Handout mode un-reveals the deck — each slide becomes a natural-height block,
 paginated by real rendered height, so overflowing slides and full code
-listings are kept intact, not clipped. It handles lazy-loaded images,
+listings are kept intact, not clipped. Tabsets are expanded into headed
+sections so every tab is included. It also handles lazy-loaded images,
 `.fig-cite` photo slides, and even WebGL content (Plotly 3D / maps) via
 software rendering. See [`tools/README.md`](tools/README.md).
 

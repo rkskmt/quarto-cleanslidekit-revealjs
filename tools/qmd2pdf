@@ -151,6 +151,17 @@ function payload(html){
  .reveal .slide-background,.reveal .backgrounds{display:none!important}
  .reveal .r-stretch,.reveal .r-stretch img,.reveal .r-stretch svg{max-height:none!important;height:auto!important}
  .reveal section img,.reveal section svg{max-width:100%!important}
+ /* Tabby removes the source headings and hides every pane except the selected
+    one. The handout script restores each tab label as an h3 and exposes all
+    panes, so no material silently disappears from the PDF. */
+ .reveal .panel-tabset>.panel-tabset-tabby{display:none!important}
+ .reveal .panel-tabset>.tab-content>[hidden]{display:block!important}
+ .reveal .panel-tabset>.tab-content>.csk-tab-pane{display:block!important;
+   visibility:visible!important;opacity:1!important;margin-top:.8em!important}
+ .reveal .panel-tabset>.tab-content>.csk-tab-pane+.csk-tab-pane{
+   border-top:1px solid #d8dee8!important;padding-top:.8em!important}
+ .reveal .panel-tabset .csk-tab-heading{margin:0 0 .45em!important;
+   color:#2a6fd6!important;font-size:1.05em!important;font-weight:700!important}
  /* Quarto/reveal scroll code blocks at max-height 400-500px (overflow:auto). In a
     handout we want the FULL listing, so unclamp the height and kill inner scroll
     (the theme's click-to-zoom button is interactive and hidden in print). */
@@ -202,6 +213,32 @@ function payload(html){
   for(var i=0;i<s.length;i++){var st=s[i].style;st.display="block";st.visibility="visible";st.opacity="1";st.transform="none";st.height="auto";st.top="0";st.left="0";s[i].removeAttribute("hidden")}
   var sl=document.querySelector(".reveal .slides");if(sl){var z=sl.style;z.transform="none";z.left="0";z.top="0";z.height="auto";z.width="auto"}
   var fr=document.querySelectorAll(".reveal .fragment");for(var j=0;j<fr.length;j++){fr[j].classList.add("visible");fr[j].style.opacity="1";fr[j].style.visibility="visible"}
+  // Quarto turns the headings inside .panel-tabset into a Tabby navigation list
+  // and hides inactive panes. For handouts, restore those labels as h3 headings
+  // and expose every pane. Work from direct children so nested tabsets are
+  // expanded independently; flat() is intentionally idempotent because it runs
+  // both before and after Tabby initializes.
+  var ts=document.querySelectorAll(".panel-tabset");
+  for(var t=0;t<ts.length;t++){
+   var tabset=ts[t],tablist=null,content=null,ch=tabset.children;
+   for(var c=0;c<ch.length;c++){
+    if(ch[c].classList.contains("panel-tabset-tabby"))tablist=ch[c];
+    else if(ch[c].classList.contains("tab-content"))content=ch[c];
+   }
+   if(!tablist||!content)continue;
+   tablist.style.display="none";tablist.setAttribute("aria-hidden","true");
+   var tabs=tablist.querySelectorAll('a[href^="#"]');
+   for(var a=0;a<tabs.length;a++){
+    var id=tabs[a].getAttribute("href").slice(1),pane=document.getElementById(id);
+    if(!pane||pane.parentElement!==content)continue;
+    pane.removeAttribute("hidden");pane.removeAttribute("aria-hidden");
+    pane.style.display="block";pane.style.visibility="visible";pane.style.opacity="1";
+    pane.classList.add("csk-tab-pane");
+    var heading=null,pc=pane.children;
+    for(var h=0;h<pc.length;h++){if(pc[h].classList.contains("csk-tab-heading")){heading=pc[h];break}}
+    if(!heading){heading=document.createElement("h3");heading.className="csk-tab-heading";heading.innerHTML=tabs[a].innerHTML;pane.insertBefore(heading,pane.firstChild)}
+   }
+  }
   // reveal lazy-loads media (img[data-src], section[data-background-image]) only
   // when a slide is visited; in a static handout that never fires, so force it.
   var im=document.querySelectorAll("img[data-src]");for(var k=0;k<im.length;k++){im[k].src=im[k].getAttribute("data-src");im[k].removeAttribute("loading")}

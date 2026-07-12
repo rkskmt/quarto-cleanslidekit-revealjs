@@ -27,8 +27,9 @@ tools/qmd2pdf deck.html --no-render    # print an already-built .html
 - **slides** is reveal's own `?print-pdf` (fixed 16:9, one page per slide).
 
 Handles, in handout mode: full code listings (no scroll clipping), lazy-loaded
-images, `.fig-cite` photo slides, `.break-slide` section dividers, WebGL content
-(plotly maps / 3D via software rendering), and hides interactive UI / speaker notes.
+images, tabsets (all panes expanded under their tab headings), `.fig-cite` photo
+slides, `.break-slide` section dividers, WebGL content (plotly maps / 3D via
+software rendering), and hides interactive UI / speaker notes.
 
 ### Requirements
 
