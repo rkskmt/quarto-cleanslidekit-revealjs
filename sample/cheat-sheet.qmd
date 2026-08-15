@@ -15,3 +15,11 @@ subtitle: "Formulas and rules of thumb"
 - Diverging loss → learning rate too large
 - Great train / poor test accuracy → overfitting: simplify or regularize
 - Tune hyperparameters on a **validation** split, never the test set
+
+## Takeaway box
+
+Use `.takeaway` for the one sentence students should retain from the slide:
+
+::: {.takeaway}
+One slide, one key message.
+:::

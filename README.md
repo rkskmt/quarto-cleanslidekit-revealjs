@@ -189,6 +189,15 @@ classes, no inline styles:
 
 - **`.prompt`** — a neutral rounded frame that marks "this paragraph is the
   exercise statement".
+- **`.takeaway`** — a large, centered key-message box for the end of a slide.
+  It stays in normal flow, so it never overlaps taller content:
+
+  ```markdown
+  ::: {.takeaway}
+  One slide, one key message.
+  :::
+  ```
+
 - **`.caption-note`** — an annotation caption for whatever sits directly
   above it (a table, a figure, a code block).
 - **`.break-slide`** + **`.break-title`** — section-divider slides; they
