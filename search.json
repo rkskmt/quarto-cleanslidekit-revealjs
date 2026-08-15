@@ -91,6 +91,13 @@
     "text": "Rules of thumb\n\n\nAlways keep a held-out test set — no exceptions\nDiverging loss → learning rate too large\nGreat train / poor test accuracy → overfitting: simplify or regularize\nTune hyperparameters on a validation split, never the test set"
   },
   {
+    "objectID": "cheat-sheet.html#takeaway-box",
+    "href": "cheat-sheet.html#takeaway-box",
+    "title": "Cheat sheet",
+    "section": "Takeaway box",
+    "text": "Takeaway box\n\nUse .takeaway for the one sentence students should retain from the slide:\n\nOne slide, one key message."
+  },
+  {
     "objectID": "gradient-descent.html#recap",
     "href": "gradient-descent.html#recap",
     "title": "Gradient descent",
