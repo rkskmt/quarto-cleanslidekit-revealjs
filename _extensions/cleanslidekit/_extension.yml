@@ -1,6 +1,6 @@
 title: CleanSlideKit RevealJS
 author: rkskmt
-version: 1.9.1
+version: 1.9.2
 quarto-required: ">=1.4.0"
 contributes:
   formats:
@@ -46,6 +46,20 @@ contributes:
           // metric tables and has no such race. Quarto offers no knob for this, so
           // trap the Reveal global (reveal.js loads later, in <body>) and rewrite
           // the math config before Reveal.initialize hands it to the math plugin.
+          //
+          // CommonHTML still sizes math by measuring an ex-height probe in the
+          // DOM next to each equation (matchFontHeight). reveal.css keeps every
+          // section display:none until Reveal's first layout, so when MathJax
+          // loads fast (warm HTTP cache) the initial whole-deck typeset runs
+          // against hidden slides: the probe measures 0, MathJax substitutes
+          // the 16px-body default ex but keeps the real 32px font-size, and
+          // every equation renders at ~50-61% — permanently, because MathJax
+          // never re-typesets processed math. A fixed scale with
+          // matchFontHeight off removes the DOM measurement entirely (which
+          // also fixes math inside collapsed code-fold / callout bodies —
+          // those always measured hidden). 127% is what the measurement
+          // itself yields for this theme's fonts when it works; retune it if
+          // the body font ever changes.
           (function () {
             var reveal;
             Object.defineProperty(window, "Reveal", {
@@ -59,6 +73,7 @@ contributes:
                 value.initialize = function (config) {
                   if (config && config.math && typeof config.math.config === "string") {
                     config.math.config = config.math.config.replace("_HTML", "_CHTML");
+                    config.math.CommonHTML = { scale: 127, matchFontHeight: false };
                   }
                   return initialize.call(this, config);
                 };
