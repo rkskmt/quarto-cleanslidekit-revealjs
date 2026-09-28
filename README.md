@@ -200,6 +200,21 @@ classes, no inline styles:
 
 - **`.caption-note`** — an annotation caption for whatever sits directly
   above it (a table, a figure, a code block).
+- **`.columns-v-center`** — on the `.columns` div, aligns the columns on their
+  vertical centers instead of Quarto's default top edge. For a short figure
+  beside a tall block of text; leave it off when both columns are text, where
+  top alignment reads better:
+
+  ```markdown
+  :::: {.columns .columns-v-center}
+  ::: {.column width="70%"}
+  Text that sets the row height
+  :::
+  ::: {.column width="30%"}
+  ![](imgs/small.png)
+  :::
+  ::::
+  ```
 - **`.break-slide`** + **`.break-title`** — section-divider slides; they
   also appear as dividers in the slide-list drawer.
 - **Result frames** — code-cell stdout renders in a dashed outline with a

@@ -153,7 +153,9 @@ function payload(html){
  .reveal section img,.reveal section svg{max-width:100%!important}
  /* Tabby removes the source headings and hides every pane except the selected
     one. The handout script restores each tab label as an h3 and exposes all
-    panes, so no material silently disappears from the PDF. */
+    panes, so no material silently disappears from the PDF. The label is a
+    small colored pane caption, not a section heading, so the theme's h3 band
+    (dark background, padding) is cleared off it. */
  .reveal .panel-tabset>.panel-tabset-tabby{display:none!important}
  .reveal .panel-tabset>.tab-content>[hidden]{display:block!important}
  .reveal .panel-tabset>.tab-content>.csk-tab-pane{display:block!important;
@@ -161,6 +163,7 @@ function payload(html){
  .reveal .panel-tabset>.tab-content>.csk-tab-pane+.csk-tab-pane{
    border-top:1px solid #d8dee8!important;padding-top:.8em!important}
  .reveal .panel-tabset .csk-tab-heading{margin:0 0 .45em!important;
+   background:none!important;padding:0!important;
    color:#2a6fd6!important;font-size:1.05em!important;font-weight:700!important}
  /* Quarto/reveal scroll code blocks at max-height 400-500px (overflow:auto). In a
     handout we want the FULL listing, so unclamp the height and kill inner scroll
