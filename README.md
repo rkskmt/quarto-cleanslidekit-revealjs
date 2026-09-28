@@ -75,8 +75,9 @@ working.
 
 ### Navigation chrome (`slide-ui.js`)
 
-A prev/next + `n / N` counter sits in the footer, and a Home button
-(bottom-right) returns to `index.html`. The whole course behaves like one
+A prev/next + `n / N` counter sits in the bottom-right corner (clear of the
+left-aligned body text on long scrolled slides), and a Home button in the
+same corner returns to `index.html`. The whole course behaves like one
 site: pressing **← on a deck's first slide** goes back to the index, and
 pressing **→ on the index** returns you to the exact slide you left
 (remembered per tab). Touch-safe on tablets — ghost clicks and double-fired
