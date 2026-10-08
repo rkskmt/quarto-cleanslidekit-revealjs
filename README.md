@@ -199,6 +199,15 @@ classes, no inline styles:
   :::
   ```
 
+  The default is a black frame on white. Add `.dark` for white text on a
+  black fill:
+
+  ```markdown
+  ::: {.takeaway .dark}
+  One slide, one key message.
+  :::
+  ```
+
 - **`.caption-note`** — an annotation caption for whatever sits directly
   above it (a table, a figure, a code block).
 - **`.columns-v-center`** — on the `.columns` div, aligns the columns on their

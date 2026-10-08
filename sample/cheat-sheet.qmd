@@ -23,3 +23,9 @@ Use `.takeaway` for the one sentence students should retain from the slide:
 ::: {.takeaway}
 One slide, one key message.
 :::
+
+Add `.dark` for white text on a black fill:
+
+::: {.takeaway .dark}
+One slide, one key message.
+:::
