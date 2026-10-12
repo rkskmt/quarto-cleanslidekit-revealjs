@@ -29,3 +29,15 @@ Add `.dark` for white text on a black fill:
 ::: {.takeaway .dark}
 One slide, one key message.
 :::
+
+## Table rules
+
+Wrap a table in `.table-style` to set its rules and header alignment:
+
+::: {.table-style first-col-rule="3px" col-rules="all" head-rule="3px" head-align="center"}
+| Metric | Meaning | Formula |
+|---|---|:---:|
+| **Accuracy** | correct predictions over all predictions | $\dfrac{TP+TN}{TP+FP+FN+TN}$ |
+| **Precision** | true among those predicted positive | $\dfrac{TP}{TP+FP}$ |
+| **Recall** | found among those actually positive | $\dfrac{TP}{TP+FN}$ |
+:::

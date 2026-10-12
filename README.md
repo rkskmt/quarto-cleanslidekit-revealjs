@@ -153,7 +153,7 @@ Japanese word in the center.
 
 ## Authoring shorthands (Lua filters)
 
-Six self-contained filters, active out of the box:
+Seven self-contained filters, active out of the box:
 
 | Write | Get | Filter |
 |---|---|---|
@@ -164,6 +164,7 @@ Six self-contained filters, active out of the box:
 | `## {.bg-cover src="img.png"}` | full-bleed background-image slide (+ `.cite` for the credit) | `cite-image.lua` |
 | `::: {.fig width="50%"}` around a code cell | scales the *computed* figure — revealjs normally drops `out-width` for these | `figscale.lua` |
 | `::: {.plotly-iframe src="fig.html" width="900" height="520"}` | a Plotly HTML export embedded as a sized iframe | `plotly-iframe.lua` |
+| `::: {.table-style first-col-rule="3px" col-rules="all" head-align="center"}` around a table | per-table rules and header alignment — see [Tables](#tables) | `table-style.lua` |
 
 Two more filters work behind the scenes: `slide-body.lua` wraps slide content
 for the layout CSS, and `card-grid.lua` hardens the lecture-index grid
@@ -210,6 +211,9 @@ classes, no inline styles:
 
 - **`.caption-note`** — an annotation caption for whatever sits directly
   above it (a table, a figure, a code block).
+- **`.table-compact`** — a small markdown table keeps its natural width and
+  sits centered instead of stretching across the slide (a 2×2 confusion
+  matrix, say). Combines with `.table-style` below.
 - **`.columns-v-center`** — on the `.columns` div, aligns the columns on their
   vertical centers instead of Quarto's default top edge. For a short figure
   beside a tall block of text; leave it off when both columns are text, where
@@ -238,6 +242,36 @@ classes, no inline styles:
 - **Scroll hint** — the first time a slide taller than the frame is shown,
   a chevron dips twice at the bottom center and fades out, signalling
   there's more below. Scrolling dismisses it; once per slide per visit.
+
+### Tables
+
+Every markdown table gets the same clean look: bold first column with a
+2px rule on its right, a 2px rule under the header row, no other lines.
+To change that for one table, wrap it in `.table-style` and set only what
+differs (`table-style.lua`):
+
+```markdown
+::: {.table-style first-col-rule="3px" col-rules="all" head-rule="3px" head-align="center"}
+| Metric | Meaning | Formula |
+|---|---|:---:|
+| **Precision** | true among those predicted positive | $\frac{TP}{TP+FP}$ |
+| **Recall** | found among those actually positive | $\frac{TP}{TP+FN}$ |
+:::
+```
+
+| Attribute | Value | Effect |
+|---|---|---|
+| `first-col-rule` | CSS width or `none` | the rule right of the first column (default 2px) |
+| `col-rules` | `all` or `2,3` | which other columns get a vertical rule on their right edge; the last column never does |
+| `col-rule` | CSS width | width of those rules (default 1px) |
+| `row-rules` | CSS width or `none` | rules between body rows (default none) |
+| `head-rule` | CSS width | the rule under the header row (default 2px) |
+| `head-align` | `left` / `center` / `right` | aligns the header cells only; body cells keep the column markers (`|:--:|`) |
+| `rule-color` | CSS color | every rule of this table (default: the theme's grays — `#aaa` vertical, `#D3D3D3` horizontal) |
+| `widths` | `auto` or `auto,auto,45%,auto` | column widths. Pandoc fixes them from the dash counts of the separator row once any line of the table exceeds 72 characters (CJK counts double); `auto` drops that so the browser sizes each column by its content, and a list fixes the listed columns to a share of the table width while the rest stay automatic |
+
+`.table-compact` (natural width, centered) combines with it:
+`::: {.table-compact .table-style col-rules="all"}`.
 
 ## Lecture index
 
