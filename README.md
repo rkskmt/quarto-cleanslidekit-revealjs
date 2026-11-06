@@ -210,7 +210,10 @@ classes, no inline styles:
   ```
 
 - **`.caption-note`** — an annotation caption for whatever sits directly
-  above it (a table, a figure, a code block).
+  above it (a table, a figure, a code block). The chip shrinks to its content;
+  the body may be a paragraph, several paragraphs, or a list (rendered with
+  quiet gray markers). Add `.center` to center the chip under a centered
+  element such as a display formula.
 - **`.table-compact`** — a small markdown table keeps its natural width and
   sits centered instead of stretching across the slide (a 2×2 confusion
   matrix, say). Combines with `.table-style` below.
