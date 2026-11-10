@@ -222,10 +222,12 @@
   font-weight: lighter;
 }
 /* Caption that annotates whatever sits directly above it — a table, a figure,
-   or a code cell's output. A bordered serif "legend" chip, deliberately unlike
-   the sans-serif body bullets, so trailing explanation never reads as another
-   main point. System fonts only, NO web-font download: Latin → Georgia,
-   Japanese → an installed mincho if present else the generic serif fallback.
+   or a code cell's output. A bordered gray "legend" chip: the frame, gray
+   color and smaller size set it apart from the body bullets, so trailing
+   explanation never reads as another main point. It keeps the body's font.
+   It used to be serif (Latin → Georgia, Japanese → a mincho), but a machine
+   with no Japanese mincho installed falls back to gothic for the Japanese
+   only, which left Latin letters and digits in serif inside a gothic line.
    The frame sits on the div itself, shrink-wrapped with fit-content, so the
    body may be one paragraph, several, or a list and still gets a single chip
    (an earlier version framed the inner <p>, which left a list unframed). */
@@ -239,7 +241,6 @@
   border-radius: 8px;
   background: #f7f8fa;
   text-align: left;
-  font-family: Georgia, Cambria, "Times New Roman", "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif CJK JP", serif !important;
   font-size: 0.82em !important;
   color: #555 !important;
   font-weight: normal !important;
