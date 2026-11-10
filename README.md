@@ -78,9 +78,9 @@ working.
 A prev/next + `n / N` counter sits in the bottom-right corner (clear of the
 left-aligned body text on long scrolled slides), and a Home button in the
 same corner returns to `index.html`. The whole course behaves like one
-site: pressing **← on a deck's first slide** goes back to the index, and
-pressing **→ on the index** returns you to the exact slide you left
-(remembered per tab). Touch-safe on tablets — ghost clicks and double-fired
+site: after Home, pressing **→ on the index** returns you to the exact
+slide you left (remembered per tab). Going back from a deck's first slide
+does not leave the deck; only Home does. Touch-safe on tablets — ghost clicks and double-fired
 gestures are coalesced into single steps.
 
 The same module quietly fixes classroom papercuts: an opened code-fold that
@@ -366,7 +366,6 @@ software rendering. See [`tools/README.md`](tools/README.md).
 | <kbd>t</kbd> / <kbd>Ctrl+L</kbd> | any slide | open the slide-list drawer |
 | <kbd>Ctrl+F</kbd> / <kbd>/</kbd> | any slide | open site-wide search |
 | <kbd>↑</kbd><kbd>↓</kbd> + <kbd>Enter</kbd> | drawer | move / jump |
-| <kbd>←</kbd> on the first slide | deck | back to the index |
 | <kbd>→</kbd> on the index | index | return to the slide you left |
 | <kbd>Ctrl</kbd>+wheel | code zoom | adjust font size |
 | <kbd>Space</kbd>+drag | code zoom | pan |
