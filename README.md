@@ -336,7 +336,8 @@ color-coded lecture cards — no inline CSS, just classes:
   nodes fully connected to the next column; `.app` items sit under a dashed
   rule. Add `.output` to the last category's header
   (`### Project {.sec .cat5 .output}`) to draw it as the output layer. Below
-  1120px the layers stack in one column. Hovering or keyboard-focusing a
+  1120px each label moves under its node, and below 720px the layers stack
+  in one column. Hovering or keyboard-focusing a
   node fires it: the node, its edges and the nodes of the two neighbouring
   layers light up. Metadata keys tune the look: `network-accent` (nodes),
   `network-active` (hover) and `network-line` (lines) take a hex colour,
