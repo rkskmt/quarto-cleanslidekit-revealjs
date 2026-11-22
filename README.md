@@ -319,17 +319,29 @@ color-coded lecture cards — no inline CSS, just classes:
   [`tools/qmd2pdf`](tools/).) The badge is gated at render time: if `pdf/`
   next to the index holds no PDF (fresh clone, or a course without handouts
   yet), the link is dropped from the output — safe to leave in `index.qmd`.
-- **Ruled layout:** `:::: {.lectures .ruled}` swaps the cards for heavy
-  black rules and one accent colour: the slide title, the search box and the
-  PDF gate become one framed bar, and each category becomes a framed box of
-  numbered rows, two columns wide. Category colours are ignored. The page
-  opens in reveal.js's scroll view and is laid out at the window's width
-  (one column below 800px) instead of scaling the 1280×720 slide. The same
-  class works on the handouts page, where `.idx-lead` and the backlink take
-  the search box's and the gate's places. The accent is yellow unless the
-  metadata key `ruled-accent` sets another hex colour, once per course in
-  `_metadata.yaml` (`ruled-accent: "#7fd3ff"`); the text on it turns black
-  or white, whichever reads better.
+- **Layouts:** one line in the course's `_metadata.yaml` switches the
+  index and the handouts page together, with no change to their markup:
+  `lecture-index: cards` (the default), `ruled` or `network`. The ruled and
+  network layouts ignore category colours, open in reveal.js's scroll view
+  and are laid out at the window's width instead of scaling the 1280×720
+  slide. On the handouts page, `.idx-lead` and the backlink take the search
+  box's and the gate's places.
+- **Ruled layout:** heavy black rules and one accent colour. The slide
+  title, the search box and the PDF gate become one framed bar, and each
+  category becomes a framed box of numbered rows, two columns wide (one
+  below 800px). The accent is yellow unless the metadata key `ruled-accent`
+  sets another hex colour (`ruled-accent: "#7fd3ff"`); the text on it turns
+  black or white, whichever reads better.
+- **Network layout:** each numbered category is a layer, a column of round
+  nodes fully connected to the next column; `.app` items sit under a dashed
+  rule. Add `.output` to the last category's header
+  (`### Project {.sec .cat5 .output}`) to draw it as the output layer. Below
+  1120px the layers stack in one column. Hovering or keyboard-focusing a
+  node fires it: the node, its edges and the nodes of the two neighbouring
+  layers light up. Metadata keys tune the look: `network-accent` (nodes),
+  `network-active` (hover) and `network-line` (lines) take a hex colour,
+  `network-line-width` takes 0.25 to 6 (px) and `network-node-size` takes 24
+  to 72 (px).
 - **Term tabs** — split a long index (e.g. two semesters) by wrapping the
   grids in Quarto's native tabset; it renders as a compact segmented control
   and the selected term is remembered when students come back:
