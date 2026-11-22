@@ -319,6 +319,17 @@ color-coded lecture cards — no inline CSS, just classes:
   [`tools/qmd2pdf`](tools/).) The badge is gated at render time: if `pdf/`
   next to the index holds no PDF (fresh clone, or a course without handouts
   yet), the link is dropped from the output — safe to leave in `index.qmd`.
+- **Ruled layout:** `:::: {.lectures .ruled}` swaps the cards for heavy
+  black rules and one accent colour: the slide title, the search box and the
+  PDF gate become one framed bar, and each category becomes a framed box of
+  numbered rows, two columns wide. Category colours are ignored. The page
+  opens in reveal.js's scroll view and is laid out at the window's width
+  (one column below 800px) instead of scaling the 1280×720 slide. The same
+  class works on the handouts page, where `.idx-lead` and the backlink take
+  the search box's and the gate's places. The accent is yellow unless the
+  metadata key `ruled-accent` sets another hex colour, once per course in
+  `_metadata.yaml` (`ruled-accent: "#7fd3ff"`); the text on it turns black
+  or white, whichever reads better.
 - **Term tabs** — split a long index (e.g. two semesters) by wrapping the
   grids in Quarto's native tabset; it renders as a compact segmented control
   and the selected term is remembered when students come back:
