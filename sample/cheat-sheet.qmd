@@ -41,3 +41,93 @@ Wrap a table in `.table-style` to set its rules and header alignment:
 | **Precision** | true among those predicted positive | $\dfrac{TP}{TP+FP}$ |
 | **Recall** | found among those actually positive | $\dfrac{TP}{TP+FN}$ |
 :::
+
+## Mini slide
+
+Use `.mini-slide` to draw a slide inside a slide, such as a sample of the slides students hand in:
+
+:::: {.columns}
+
+::: {.column width="60%"}
+::::: {.mini-slide label="Sample"}
+
+::: {.mini-title}
+Problem
+:::
+
+:::: {.mini-row}
+
+::: {.mini-col}
+- **Persona**: a second-year student who commutes by train
+- **Pain**: every subject announces its deadlines through a different channel
+:::
+
+::: {.mini-fig}
+[Math: in class]{.mini-chip}
+[English: e-mail]{.mini-chip}
+↓
+[Missed deadline]{.mini-chip .warn}
+:::
+
+::::
+
+::: {.mini-foot}
+Presenter: Aoki
+:::
+
+:::::
+:::
+
+::: {.column width="40%"}
+- Ordinary markdown inside
+- The text scales with the frame
+- `width`, `ratio`, `text`, `accent` and `label` set the frame
+:::
+
+::::
+
+## Mini slide options
+
+:::: {.columns}
+
+::: {.column width="50%"}
+::::: {.mini-slide .cover width="90%" accent="#c0392b"}
+
+::: {.mini-title}
+Deadline Board
+:::
+
+An app that keeps every deadline in one list
+
+Team A\
+Aoki, Inoue, Ueda
+
+:::::
+
+::: {.caption-note .center}
+`.cover`: a title page
+:::
+:::
+
+::: {.column width="50%"}
+::::: {.mini-slide width="60%" ratio="4:3" text="28" accent="#2e7d32" label="4:3"}
+
+::: {.mini-title}
+Concept
+:::
+
+::: {.mini-lead}
+Open it, see what is due
+:::
+
+- One list for every subject
+- Sorted by deadline
+
+:::::
+
+::: {.caption-note .center}
+`ratio="4:3"`, `text="28"`, `accent`
+:::
+:::
+
+::::

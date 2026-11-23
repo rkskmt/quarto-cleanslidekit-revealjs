@@ -55,7 +55,7 @@ recorded from the latter.
   as buttons.
 - 🏵️ **Rosette badges** — mark slides *important / practice / FYI* with one
   class; badges also show as colored dots in the slide list.
-- ✍️ **Authoring shorthands** — six Lua filters for `==highlights==`,
+- ✍️ **Authoring shorthands** — Lua filters for `==highlights==`,
   image + citation slides, figure scaling, Plotly embeds, and more.
 - 🗂️ **Course index pages** — an auto-numbered, color-coded card grid for
   your lecture list, plus a matching handouts page.
@@ -153,7 +153,7 @@ Japanese word in the center.
 
 ## Authoring shorthands (Lua filters)
 
-Seven self-contained filters, active out of the box:
+Eight self-contained filters, active out of the box:
 
 | Write | Get | Filter |
 |---|---|---|
@@ -164,6 +164,7 @@ Seven self-contained filters, active out of the box:
 | `## {.bg-cover src="img.png"}` | full-bleed background-image slide (+ `.cite` for the credit) | `cite-image.lua` |
 | `::: {.fig width="50%"}` around a code cell | scales the *computed* figure — revealjs normally drops `out-width` for these | `figscale.lua` |
 | `::: {.plotly-iframe src="fig.html" width="900" height="520"}` | a Plotly HTML export embedded as a sized iframe | `plotly-iframe.lua` |
+| `::: {.mini-slide width="60%" label="Sample"}` | a slide drawn inside a slide; its text scales with the frame — see [Mini slide](#mini-slide) | `mini-slide.lua` |
 | `::: {.table-style first-col-rule="3px" col-rules="all" head-align="center"}` around a table | per-table rules and header alignment — see [Tables](#tables) | `table-style.lua` |
 
 Two more filters work behind the scenes: `slide-body.lua` wraps slide content
@@ -245,6 +246,69 @@ classes, no inline styles:
 - **Scroll hint** — the first time a slide taller than the frame is shown,
   a chevron dips twice at the bottom center and fades out, signalling
   there's more below. Scrolling dismisses it; once per slide per visit.
+
+### Mini slide
+
+`.mini-slide` draws a slide inside a slide: a framed page for showing what a
+slide should look like — a sample of the slides students hand in, a
+before/after of a slide design, a page of a report. Ordinary markdown goes
+inside (`mini-slide.lua`):
+
+```markdown
+::::: {.mini-slide width="60%" label="Sample"}
+
+::: {.mini-title}
+Problem
+:::
+
+:::: {.mini-row}
+
+::: {.mini-col}
+- **Persona**: a second-year student who commutes by train
+- **Pain**: every subject announces its deadlines through a different channel
+:::
+
+::: {.mini-fig}
+[Math: in class]{.mini-chip}
+[English: e-mail]{.mini-chip}
+↓
+[Missed deadline]{.mini-chip .warn}
+:::
+
+::::
+
+::: {.mini-foot}
+Presenter: Aoki
+:::
+
+:::::
+```
+
+The page keeps its aspect ratio and its text scales with the frame, so the
+same source reads the same at any width, on screen and in the handout PDF.
+Sizes are in points of the page drawn: a page is 540pt high like a PowerPoint
+slide, so the default body text is 24pt on that page. Content that does not
+fit is clipped, as on a real slide — lower `text` or cut the content.
+
+| Attribute | Sets | Default |
+|---|---|---|
+| `width` | width of the frame (`60%`, `640px`), centered | fills the enclosing block (a column, say) |
+| `ratio` | aspect ratio of the page, `W:H` | `16:9` |
+| `text` | body text size in points of the page; the other parts scale with it | `24` |
+| `accent` | color of the title rule, the lead band and accent chips | `#2f6fb7` |
+| `label` | a tag in the top-right corner (`Sample`, `Before`, …) | none |
+
+| Part | Is |
+|---|---|
+| `.mini-title` | the title of the page, over a rule in the accent color |
+| `.mini-lead` | one key phrase on a tinted band |
+| `.mini-row` | blocks side by side: `.mini-col` blocks share the width, a `.mini-fig` takes the width of its figure |
+| `.mini-fig` | a centered figure: an image, or a diagram stacked from `[text]{.mini-chip}` spans (`.accent`, `.warn`) and arrow characters |
+| `.mini-foot` | the line in the bottom-right corner |
+| `.cover` (on the frame) | a title page: centered, large title without the rule |
+
+An image inside takes `height="60%"` or `width="40%"` as a share of the page,
+so it scales with the frame too; any other unit stops the render.
 
 ### Tables
 
