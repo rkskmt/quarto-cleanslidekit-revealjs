@@ -389,7 +389,8 @@ color-coded lecture cards — no inline CSS, just classes:
   network layouts ignore category colours, open in reveal.js's scroll view
   and are laid out at the window's width instead of scaling the 1280×720
   slide. On the handouts page, `.idx-lead` and the backlink take the search
-  box's and the gate's places.
+  box's and the gate's places. In every layout, the index page turns off the
+  scroll view's snapping, so a long list can stop anywhere.
 - **Ruled layout:** heavy black rules and one accent colour. The slide
   title, the search box and the PDF gate become one framed bar, and each
   category becomes a framed box of numbered rows, two columns wide (one
