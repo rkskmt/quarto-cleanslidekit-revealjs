@@ -248,7 +248,21 @@ classes, no inline styles:
   ::::
   ```
 - **`.break-slide`** + **`.break-title`** — section-divider slides; they
-  also appear as dividers in the slide-list drawer.
+  also appear as dividers in the slide-list drawer. An optional
+  **`.break-subtitle`** adds a smaller gray line under the title (the drawer
+  lists the title only):
+
+  ```markdown
+  ## {background-color="white" .center .break-slide}
+
+  ::: {.break-title}
+  Beyond vanilla gradient descent
+  :::
+
+  ::: {.break-subtitle}
+  Momentum and adaptive step sizes
+  :::
+  ```
 - **Result frames** — code-cell stdout renders in a dashed outline with a
   small "Result" tag, visually distinct from source code.
 - **Callouts, restyled** — Quarto callouts get solid colored header bars
