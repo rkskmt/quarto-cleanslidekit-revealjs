@@ -30,6 +30,12 @@ Add `.dark` for white text on a black fill:
 One slide, one key message.
 :::
 
+Add `title` for a small tag on the frame's shoulder:
+
+::: {.takeaway title="In short"}
+One slide, one key message.
+:::
+
 ## Table rules
 
 Wrap a table in `.table-style` to set its rules and header alignment:

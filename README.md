@@ -153,7 +153,7 @@ Japanese word in the center.
 
 ## Authoring shorthands (Lua filters)
 
-Eight self-contained filters, active out of the box:
+Nine self-contained filters, active out of the box:
 
 | Write | Get | Filter |
 |---|---|---|
@@ -164,6 +164,7 @@ Eight self-contained filters, active out of the box:
 | `## {.bg-cover src="img.png"}` | full-bleed background-image slide (+ `.cite` for the credit) | `cite-image.lua` |
 | `::: {.fig width="50%"}` around a code cell | scales the *computed* figure — revealjs normally drops `out-width` for these | `figscale.lua` |
 | `::: {.plotly-iframe src="fig.html" width="900" height="520"}` | a Plotly HTML export embedded as a sized iframe | `plotly-iframe.lua` |
+| `::: {.takeaway title="In short"}` | a small title tag on the key-message box's top-left shoulder — see `.takeaway` under [Slide components](#slide-components-css) | `takeaway.lua` |
 | `::: {.mini-slide width="60%" label="Sample"}` | a slide drawn inside a slide; its text scales with the frame — see [Mini slide](#mini-slide) | `mini-slide.lua` |
 | `::: {.table-style first-col-rule="3px" col-rules="all" head-align="center"}` around a table | per-table rules and header alignment — see [Tables](#tables) | `table-style.lua` |
 
@@ -209,6 +210,19 @@ classes, no inline styles:
   One slide, one key message.
   :::
   ```
+
+  Add `title` for a small tag on the frame's top-left shoulder, like the
+  legend of a fieldset (`takeaway.lua`):
+
+  ```markdown
+  ::: {.takeaway title="In short"}
+  One slide, one key message.
+  :::
+  ```
+
+  The title is inline markdown, so math, bold and links work. Pandoc reads
+  backslash escapes in an attribute value first, so double the backslashes
+  in math: `title="$y \\in \\{0, 1\\}$"`.
 
 - **`.caption-note`** — an annotation caption for whatever sits directly
   above it (a table, a figure, a code block). The chip shrinks to its content;
